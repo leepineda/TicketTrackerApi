@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TicketTrackerApi.Data;
+using System.Text.Json.Serialization;
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +17,18 @@ builder.Services.AddSwaggerGen();
 //AND AUTH
 builder.Services.AddAuthorization();
 //ADN CONTROLLERS
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+// CORS: lets the React app (port 5173) call this API
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactDev", policy =>
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -30,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactDev");
 
 app.UseAuthorization();
 

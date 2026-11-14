@@ -3,6 +3,7 @@ using TicketTrackerApi.Models; // Get the models eg.
                                //Ticket.cs and User.cs
 
 // This makes it possible to make the database inside c# INITIALIZES THEM
+// But not only that its the bridge to connect to the SQl server or any server?
 
 namespace TicketTrackerApi.Data;
 
