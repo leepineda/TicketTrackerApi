@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TicketTrackerApi.Models;
 
 public enum TicketStatus
@@ -18,10 +20,23 @@ public enum PriorityLevel
 public class Ticket
 {
     public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
     public TicketStatus Status { get; set; } = TicketStatus.Open;
     public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
+public class Registration
+{
+    public int UserId { get; set; }
+    public string Username { get; set; } = "";
+    
+    [EmailAddress]
+    public string Email { get; set; } = "";
+  
+    [Required]
+    [DataType(DataType.Password)] 
+    [ValidatePassword]          
+    public string PasswordHash { get; set; } = "";
+}
