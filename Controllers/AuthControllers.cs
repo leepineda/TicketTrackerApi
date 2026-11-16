@@ -46,4 +46,23 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "User registered successfully!" });
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto) 
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+        if (user is null)
+            return Unauthorized(new { message = "Invalid email or password." });
+
+        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+
+        if (result == PasswordVerificationResult.Failed)
+            return Unauthorized(new { message = "Invalid email or password." });
+
+        // TODO(sec): return a JWT here instead of plain user info 
+        // TODO(sec): rate limit login attempts
+        return Ok(new { user.Id, user.Username, user.Email });
+    }
 }

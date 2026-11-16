@@ -4,13 +4,16 @@
     namespace TicketTrackerApi.DTOs;
     public class RegistrationDto
     {
+        [Required]
         public string Username { get; set; } = "";
         
-        [EmailAddress]
+        [Required, EmailAddress]
         public string Email { get; set; } = "";
     
         [Required]
         [DataType(DataType.Password)] 
         [ValidatePassword]          
-        public string PasswordHash { get; set; } = "";
+        public string Password { get; set; } = "";
+
+        public int? DepartmentId { get; set; };
     }
