@@ -14,4 +14,33 @@ public class AppDbContext : DbContext
         //This makes the TABLES 
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<Department> Departments => Set<Department>();
+    public DbSet<Category> Categories => Set<Category>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Category>().HasData(
+            new Category { Id = 1, Name = "Hardware" },
+            new Category { Id = 2, Name = "Software" },
+            new Category { Id = 3, Name = "Network" },
+            new Category { Id = 4, Name = "Account & Access" },
+            new Category { Id = 5, Name = "Email" },
+            new Category { Id = 6, Name = "Security" },
+            new Category { Id = 7, Name = "Service Request" },
+            new Category { Id = 8, Name = "Other" }
+        );
+
+        modelBuilder.Entity<Department>().HasData(
+            new Department { Id = 1, Name = "College of Engineering" },
+            new Department { Id = 2, Name = "College of Education" },
+            new Department { Id = 3, Name = "College of Information Technology" },
+            new Department { Id = 4, Name = "Registrar's Office" },
+            new Department { Id = 5, Name = "Library" },
+            new Department { Id = 6, Name = "Accounting Office" },
+            new Department { Id = 7, Name = "OAR" },
+            new Department { Id = 8, Name = "Other" }
+            );
+    }
 }

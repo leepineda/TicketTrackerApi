@@ -26,4 +26,7 @@ public class Ticket
 
     public int UserId { get; set; } 
     public UserEntity? User { get; set; }
+
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
 }
