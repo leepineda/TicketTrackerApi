@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         };
 
         //  Securely hash the plain-text password from the DTO
-        user.PasswordHash = _passwordHasher.HashPassword(user, dto.PasswordHash);
+        user.Password = _passwordHasher.HashPassword(user, dto.Password);
 
         //  Add to Entity Framework Core tracking and save to MSSQL
         _context.Users.Add(user);
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
         if (user is null)
             return Unauthorized(new { message = "Invalid email or password." });
 
-        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
 
         if (result == PasswordVerificationResult.Failed)
             return Unauthorized(new { message = "Invalid email or password." });

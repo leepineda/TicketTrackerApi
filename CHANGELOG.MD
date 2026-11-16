@@ -1,5 +1,29 @@
 # Changelog
 
+## (v0.2.0 in progress)
+
+### Added
+- `Category` model with seeded IT categories: Hardware, Software, Network, Account & Access, Email, Security, Service Request, Other
+- `Department` model, seeded with the university colleges and offices that submit tickets
+- `Ticket.CategoryId` (nullable) foreign key linking tickets to a category
+- `UserEntity.DepartmentId` (nullable) foreign key linking users to a department
+- Seed data through `HasData` in `AppDbContext.OnModelCreating`, applied via migration
+- `LoginDto` and login endpoint (`POST /api/Auth/login`) that verifies the password against the stored hash and returns a generic error for both unknown email and wrong password
+- Register now validates that the `DepartmentId` exists and returns a 400 instead of a foreign key error
+
+### Changed
+- `RegistrationDto.PasswordHash` renamed to `Password` (it carries the plaintext password, not a hash)
+- `RegistrationDto` now has an optional `DepartmentId`, and `Username` and `Email` are required
+
+### Migration
+- Run `dotnet ef migrations add AddCategoryAndDepartment` then `dotnet ef database update` (stop `dotnet run` first)
+
+### Known issues
+- TODO(sec): Login returns plain user info and no token, so the frontend cannot stay logged in. JWT is the next step.
+- TODO(sec): No rate limiting on login.
+- TODO(sec): Register reveals which emails are already registered.
+- React register form still sends `passwordHash`. It must send `password` or registration breaks.
+
 ## v0.1.0 - 2026-11-14
 Initial release: working REST API for tickets with SQL Server.
 
