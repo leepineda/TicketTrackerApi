@@ -9,10 +9,10 @@
 - `UserEntity.DepartmentId` (nullable) foreign key linking users to a department
 - Seed data through `HasData` in `AppDbContext.OnModelCreating`, applied via migration
 - `LoginDto` and login endpoint (`POST /api/Auth/login`) that verifies the password against the stored hash and returns a generic error for both unknown email and wrong password
-- Register now validates that the `DepartmentId` exists and returns a 400 instead of a foreign key error
+“No register or login pages in the frontend yet
 
 ### Changed
-- `RegistrationDto.PasswordHash` renamed to `Password` (it carries the plaintext password, not a hash)
+- “No register or login pages in the frontend yet
 - `RegistrationDto` now has an optional `DepartmentId`, and `Username` and `Email` are required
 
 ### Migration
