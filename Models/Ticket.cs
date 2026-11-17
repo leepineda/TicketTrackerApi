@@ -25,7 +25,7 @@ public class Ticket
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public int UserId { get; set; } 
-    public UserEntity? User { get; set; }
+    public AppUser? User { get; set; }
 
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }

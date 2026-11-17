@@ -22,6 +22,50 @@ namespace TicketTrackerApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TicketTrackerApi.Models.AppUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("AppUsers");
+                });
+
             modelBuilder.Entity("TicketTrackerApi.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -180,34 +224,13 @@ namespace TicketTrackerApi.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("TicketTrackerApi.Models.UserEntity", b =>
+            modelBuilder.Entity("TicketTrackerApi.Models.AppUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("TicketTrackerApi.Models.Department", "Department")
+                        .WithMany("Users")
+                        .HasForeignKey("DepartmentId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Users");
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("TicketTrackerApi.Models.Ticket", b =>
@@ -216,7 +239,7 @@ namespace TicketTrackerApi.Migrations
                         .WithMany("Tickets")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("TicketTrackerApi.Models.UserEntity", "User")
+                    b.HasOne("TicketTrackerApi.Models.AppUser", "User")
                         .WithMany("Tickets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -227,13 +250,9 @@ namespace TicketTrackerApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TicketTrackerApi.Models.UserEntity", b =>
+            modelBuilder.Entity("TicketTrackerApi.Models.AppUser", b =>
                 {
-                    b.HasOne("TicketTrackerApi.Models.Department", "Department")
-                        .WithMany("Users")
-                        .HasForeignKey("DepartmentId");
-
-                    b.Navigation("Department");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("TicketTrackerApi.Models.Category", b =>
@@ -244,11 +263,6 @@ namespace TicketTrackerApi.Migrations
             modelBuilder.Entity("TicketTrackerApi.Models.Department", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("TicketTrackerApi.Models.UserEntity", b =>
-                {
-                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

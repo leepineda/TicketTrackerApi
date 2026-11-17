@@ -12,8 +12,8 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         //This makes the TABLES 
-    public DbSet<Ticket> Tickets => Set<Ticket>();
-    public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<Ticket> Tickets=> Set<Ticket>();
+    public DbSet<AppUser> AppUsers => Set<AppUser>();
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Category> Categories => Set<Category>();
 
@@ -42,5 +42,13 @@ public class AppDbContext : DbContext
             new Department { Id = 7, Name = "OAR" },
             new Department { Id = 8, Name = "Other" }
             );
+
+        modelBuilder.Entity<AppUser>(user =>
+        {
+            user.Property(u => u.Username).HasMaxLength(50);
+            user.Property(u => u.Email).HasMaxLength(256);
+            user.HasIndex(u => u.Username).IsUnique();
+            user.HasIndex(u => u.Email).IsUnique();
+        });
     }
 }

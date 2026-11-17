@@ -1,5 +1,47 @@
 # Changelog
 
+## (v0.3.0)
+
+## Improvements on da way
+
+### Added
+- User roles (`UserRole`: Member, Technician, Admin) and account status (`AccountStatus`: Pending, Approved, Rejected) on `AppUser`
+- Registration creates Member + Pending accounts that need admin approval
+- Admin approval endpoints (`AdminUsersController`): list users by status, approve, reject
+- `UserSummaryDto` so admin responses never include password hashes
+- `AdminSeeder`: creates the first Admin from `.env` values if none exists
+- JWT login: `TokenService` (behind `ITokenService`) issues tokens with id, name, email and role claims
+- JWT bearer authentication, role-based `[Authorize]`, and Swagger "Authorize" support
+- `GET /api/Auth/me` endpoint, kept for testing tokens
+- Unique indexes and max lengths on `AppUser.Username` (50) and `AppUser.Email` (256)
+- Department and Category models with seed data
+
+### Changed
+- Renamed `UserEntity` to `AppUser` and `Roles` to `UserRole`
+- Register requires `DepartmentId` and validates it; returns 409 for duplicate email or username, 400 for an unknown department
+- Register and login normalize email (trim, lowercase)
+- Register DTO has length limits (username 3-50, email 256, password 8-128)
+- Login checks account status only after the password is verified, so wrong passwords always get the same generic error
+- One shared `IPasswordHasher<AppUser>` injected through DI
+- React frontend split into `api/`, `hooks/` and `components/`
+
+### Security
+- Register DTO has no Role or Status, so users cannot register as Admin (verified: `"role": "Admin"` in the JSON still creates a Member)
+- Admin accounts cannot be approved or rejected through the admin endpoints (verified: 403)
+- Duplicate registrations that slip past the checks are caught at the unique index and returned as 409
+- App refuses to start if `Jwt:Key` is missing or shorter than 32 characters
+
+### TODO(sec) (deferred)
+- Secure `TicketsController`: `[Authorize]`, ownership checks, DTOs
+- Rate limiting and lockout on login and register
+- Patch `System.Security.Cryptography.Pkcs` 9.0.4 (transitive, known vulnerabilities)
+- Rotate `Jwt__Key`
+- Dummy hash when the email isn't found (timing difference)
+- Narrow the duplicate-key catch to SQL error 2601/2627
+- Reject tokens of users disabled after the token was issued; refresh tokens
+- Audit fields (`ReviewedBy`, `ReviewedAt`) on approvals
+- Forced password change for the seeded admin
+
 ## (v0.2.0 in progress)
 
 ### Added
